@@ -1,18 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
-	"github.com/alextwothousand/batteryman/batteryman"
+	"github.com/alextwothousand/batteryman/cli/commands"
+	"github.com/urfave/cli/v2"
 )
 
-func main() {
-	device, err := batteryman.GetBatteryDevice()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("active battery device: %s\n", device)
-
+/*func main() {
 	threshold, err := batteryman.GetThreshold()
 	if err != nil {
 		panic(err)
@@ -27,10 +23,28 @@ func main() {
 
 	fmt.Printf("current charge levels: %d\n", capacity)
 
-	status, err := batteryman.GetStatus()
-	if err != nil {
-		panic(err)
+}*/
+
+func main() {
+	app := &cli.App{
+		Name:  "batteryman",
+		Usage: "monitor or configure your computer's battery",
+		Commands: []*cli.Command{
+			{
+				Name:   "status",
+				Usage:  "get the current battery charge status",
+				Action: commands.Status,
+			},
+			{
+				Name:   "device",
+				Usage:  "get the name of the active battery device",
+				Action: commands.Device,
+			},
+		},
 	}
 
-	fmt.Printf("current battery status: %s\n", status)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
